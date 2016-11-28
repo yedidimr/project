@@ -28,7 +28,12 @@ class Result:
     self.score = float(score_line.split(':')[1].strip())
     self.matches = int(matches_lines.split(':')[1].strip())
     assert len(aa_matches_lines) == self.matches
-    self.all_aa = [aa_match.split()[0] for aa_match in aa_matches_lines]
+    self.all_aa_surface = [aa_match.split()[0] for aa_match in aa_matches_lines]
+    self.all_aa_interface = [aa_match.split()[5] for aa_match in aa_matches_lines]
+    self.surface_aa = [aa_match.split()[1] for aa_match in aa_matches_lines]
+    self.interface_aa = [aa_match.split()[6] for aa_match in aa_matches_lines]
+    self.interface_name = self.interface.get_name()
+    self.surface_name = self.surface.get_name()
     self.transform = str(transform_line.split(':')[1].strip())
     self.rmsd = INF
     self.energy = INF
@@ -105,6 +110,7 @@ class UBQResultParser(ResultParser):
     ResultParser.__init__(self)
 
   def _parse_results(self, interface, surface, sol_file):
+    self.filename = sol_file
     solution_data = [x.strip() for x in open(sol_file).readlines()]
 
     results = []
